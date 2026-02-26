@@ -9,17 +9,17 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/maheshlokku/Terraform-Jenkins.git'
+                git branch: 'main',
+                    url: 'https://github.com/maheshlokku/Terraform-Jenkins.git'
             }
         }
 
         stage('Terraform Init') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'aws-creds',
-                    usernameVariable: 'AWS_ACCESS_KEY_ID',
-                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                )]) {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
                     bat 'terraform init'
                 }
             }
@@ -33,11 +33,10 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'aws-creds',
-                    usernameVariable: 'AWS_ACCESS_KEY_ID',
-                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                )]) {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
                     bat 'terraform plan -out=tfplan'
                 }
             }
@@ -51,11 +50,10 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'aws-creds',
-                    usernameVariable: 'AWS_ACCESS_KEY_ID',
-                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                )]) {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
                     bat 'terraform apply -auto-approve tfplan'
                 }
             }
