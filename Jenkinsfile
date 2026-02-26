@@ -7,17 +7,9 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    credentialsId: 'github-creds',
-                    url: 'https://github.com/maheshlokku/Terraform-Jenkins.git'
-            }
-        }
-
         stage('Terraform Init') {
             steps {
-                dir('Terr-Jks-AWS/Environments') {
+                dir('Environments') {
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws-creds'
@@ -30,7 +22,7 @@ pipeline {
 
         stage('Terraform Validate') {
             steps {
-                dir('Terr-Jks-AWS/Environments') {
+                dir('Environments') {
                     bat 'terraform validate'
                 }
             }
@@ -38,7 +30,7 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                dir('Terr-Jks-AWS/Environments') {
+                dir('Environments') {
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws-creds'
@@ -57,7 +49,7 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                dir('Terr-Jks-AWS/Environments') {
+                dir('Environments') {
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws-creds'
