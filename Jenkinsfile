@@ -67,6 +67,7 @@ pipeline {
             }
         }
     }
+<<<<<<< HEAD
 
     post {
         always {
@@ -83,3 +84,6 @@ pipeline {
         }
     }
 }
+=======
+}
+>>>>>>> bc02f1ad25ca304e8d7a404052ce590d789e4db3
