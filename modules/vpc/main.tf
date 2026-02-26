@@ -1,7 +1,7 @@
-resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr
+resource "aws_vpc" "this" {
+  cidr_block = var.cidr_block
 
   tags = {
-    Name = "terraform-vpc"
+    Name = var.name
   }
 }
