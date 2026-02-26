@@ -16,7 +16,7 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                dir('terraform') {   // 👈 IMPORTANT
+                dir('Terraform-Jenkins') {   // 👈 IMPORTANT
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws-creds'
@@ -29,7 +29,7 @@ pipeline {
 
         stage('Terraform Validate') {
             steps {
-                dir('terraform') {
+                dir('Terraform-Jenkins') {
                     bat 'terraform validate'
                 }
             }
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                dir('terraform') {
+                dir('Terraform-Jenkins') {
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws-creds'
@@ -56,7 +56,7 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                dir('terraform') {
+                dir('Terraform-Jenkins') {
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws-creds'
