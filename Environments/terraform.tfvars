@@ -37,17 +37,17 @@ subnets = {
 ec2_instances = {
   ec21 = {
     subnet_key    = "subnet1"
-    instance_type = "t2.micro"
+    instance_type = "t3.micro"
     name          = "ec2-1"
   }
   ec22 = {
     subnet_key    = "subnet2"
-    instance_type = "t2.micro"
+    instance_type = "t3.micro"
     name          = "ec2-2"
   }
   ec23 = {
     subnet_key    = "subnet3"
-    instance_type = "t2.micro"
+    instance_type = "t3.micro"
     name          = "ec2-3"
   }
 }
