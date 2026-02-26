@@ -2,34 +2,44 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-creds').username
-        AWS_SECRET_ACCESS_KEY = credentials('aws-creds').password
-        AWS_DEFAULT_REGION    = "ap-south-1"
+        AWS_DEFAULT_REGION = "ap-south-1"
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/mahesh/terraform-aws-simple.git'
+                git 'https://github.com/maheshlokku/Terraform-Jenkins.git'
             }
         }
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                withCredentials([usernamePassword(
+                    credentialsId: 'aws-creds',
+                    usernameVariable: 'AWS_ACCESS_KEY_ID',
+                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
+                    bat 'terraform init'
+                }
             }
         }
 
         stage('Terraform Validate') {
             steps {
-                sh 'terraform validate'
+                bat 'terraform validate'
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan -out=tfplan'
+                withCredentials([usernamePassword(
+                    credentialsId: 'aws-creds',
+                    usernameVariable: 'AWS_ACCESS_KEY_ID',
+                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
+                    bat 'terraform plan -out=tfplan'
+                }
             }
         }
 
@@ -41,7 +51,13 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve tfplan'
+                withCredentials([usernamePassword(
+                    credentialsId: 'aws-creds',
+                    usernameVariable: 'AWS_ACCESS_KEY_ID',
+                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
+                    bat 'terraform apply -auto-approve tfplan'
+                }
             }
         }
     }
