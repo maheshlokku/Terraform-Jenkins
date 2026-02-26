@@ -17,28 +17,34 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
-                ]]) {
-                    bat 'terraform init'
+                dir('Terraform-Jenkins/Environments') {
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws-creds'
+                    ]]) {
+                        bat 'terraform init'
+                    }
                 }
             }
         }
 
         stage('Terraform Validate') {
             steps {
-                bat 'terraform validate'
+                dir('Terraform-Jenkins/Environments') {
+                    bat 'terraform validate'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
-                ]]) {
-                    bat 'terraform plan -out=tfplan'
+                dir('Terraform-Jenkins/Environments') {
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws-creds'
+                    ]]) {
+                        bat 'terraform plan -out=tfplan'
+                    }
                 }
             }
         }
@@ -51,22 +57,15 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
-                ]]) {
-                    bat 'terraform apply -auto-approve tfplan'
+                dir('Terraform-Jenkins/Environments') {
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws-creds'
+                    ]]) {
+                        bat 'terraform apply -auto-approve tfplan'
+                    }
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Infrastructure Created Successfully"
-        }
-        failure {
-            echo "Pipeline Failed"
         }
     }
 }
