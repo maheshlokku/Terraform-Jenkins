@@ -6,7 +6,6 @@ pipeline {
     }
 
     options {
-        // Keep build logs clean
         ansiColor('xterm')
         buildDiscarder(logRotator(numToKeepStr: '10'))
         timestamps()
@@ -30,10 +29,10 @@ pipeline {
                     steps {
                         dir('Environments') {
                             withAWS(credentials: 'aws-creds', region: env.AWS_DEFAULT_REGION) {
-                                bat '''
+                                bat """
                                     terraform init
                                     terraform validate
-                                '''
+                                """
                             }
                         }
                     }
@@ -67,7 +66,6 @@ pipeline {
             }
         }
     }
-<<<<<<< HEAD
 
     post {
         always {
@@ -84,6 +82,3 @@ pipeline {
         }
     }
 }
-=======
-}
->>>>>>> bc02f1ad25ca304e8d7a404052ce590d789e4db3
